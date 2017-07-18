@@ -1,7 +1,7 @@
 {
   "variants": {
     "normal": {
-      "model": "mymod:block_cool_model"
+      "model": "locomotion:block_cool_model"
     }
   }
 }

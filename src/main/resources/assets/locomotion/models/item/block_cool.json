@@ -1,7 +1,7 @@
 {
-  "parent": "mymod:block/block_cool_model",
+  "parent": "locomotion:block/block_cool_model",
   "textures": {
-    "layer0": "mymod:item/block_cool"
+    "layer0": "locomotion:item/block_cool"
   },
   "display": {
     "thirdperson": {
