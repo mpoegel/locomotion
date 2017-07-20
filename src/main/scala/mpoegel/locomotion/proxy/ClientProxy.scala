@@ -16,7 +16,7 @@ object ClientProxy {
   @SubscribeEvent
   def registerModels(event: ModelRegistryEvent): Unit =
   {
-    ModBlocks.initModel()
+    ModBlocks.initModels()
   }
 }
 

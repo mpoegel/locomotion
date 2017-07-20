@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "normal": {
+      "model": "locomotion:block_station_model"
+    }
+  }
+}
