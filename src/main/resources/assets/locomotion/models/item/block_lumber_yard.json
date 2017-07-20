@@ -1,5 +1,5 @@
 {
-  "parent": "locomotion:block/block_station_model",
+  "parent": "locomotion:block/block_lumber_yard_model",
   "textures": {
     "layer0": "locomotion:item/block_cool"
   },

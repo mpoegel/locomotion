@@ -1,8 +1,8 @@
 package mpoegel.locomotion.proxy
 
-import mpoegel.locomotion.{Locomotion, ModBlocks}
-import mpoegel.locomotion.blocks.BlockCool
-import mpoegel.locomotion.blocks.BlockStation
+import mpoegel.locomotion.{Locomotion, ModBlocks, ModItems}
+import mpoegel.locomotion.blocks.{BlockCool, BlockLumberYard}
+import mpoegel.locomotion.items.ItemLumberCrate
 import mpoegel.locomotion.tiles.TileStation
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemBlock}
@@ -24,9 +24,9 @@ object CommonProxy {
     event.getRegistry.register(blockCool)
     ModBlocks.blockCool = blockCool
 
-    val blockStation = new BlockStation()
-    event.getRegistry.register(blockStation)
-    ModBlocks.blockStation = blockStation
+    val blockLumberYard = new BlockLumberYard()
+    event.getRegistry.register(blockLumberYard)
+    ModBlocks.blockLumberYard = blockLumberYard
 
     GameRegistry.registerTileEntity(classOf[TileStation], Locomotion.MODID + "_blockStation")
   }
@@ -34,8 +34,11 @@ object CommonProxy {
   @SubscribeEvent
   def registerItems(event: RegistryEvent.Register[Item]): Unit =
   {
-    event.getRegistry().register(new ItemBlock(ModBlocks.blockCool).setRegistryName(ModBlocks.blockCool.getRegistryName()))
-    event.getRegistry().register(new ItemBlock(ModBlocks.blockStation).setRegistryName(ModBlocks.blockStation.getRegistryName()))
+    event.getRegistry.register(new ItemBlock(ModBlocks.blockCool).setRegistryName(ModBlocks.blockCool.getRegistryName))
+    event.getRegistry.register(new ItemBlock(ModBlocks.blockLumberYard).setRegistryName(ModBlocks.blockLumberYard.getRegistryName))
+
+    ModItems.lumber_crate = new ItemLumberCrate
+    event.getRegistry.register(ModItems.lumber_crate)
   }
 }
 
@@ -43,7 +46,7 @@ object CommonProxy {
 class CommonProxy {
   def preInit(event: FMLPreInitializationEvent): Unit =
   {
-    return;
+    return
   }
 
   def init(event: FMLInitializationEvent): Unit =

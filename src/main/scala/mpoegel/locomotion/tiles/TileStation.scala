@@ -1,6 +1,5 @@
 package mpoegel.locomotion.tiles
 
-import mpoegel.locomotion.ModBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.{IInventory, ISidedInventory}
@@ -99,9 +98,10 @@ object TileStation {
 
 /**
   * Created by Matt Poegel on 7/17/2017.
-  * This class is heavily based upon the TileEntityCobblegen.java class from the Tiny Progressions by Kashdeya
+  * This class is heavily based upon the TileEntityCobblegen.java class from the Tiny Progressions mod by Kashdeya
   */
-class TileStation extends TileEntity with ISidedInventory with ITickable {
+class TileStation(produced: Array[Item], consumed: Array[Item], name: String) extends TileEntity with ISidedInventory
+    with ITickable {
   private var tick: Int = 0
   private var count: Int = 0
   private var stack: ItemStack = _
@@ -162,7 +162,7 @@ class TileStation extends TileEntity with ISidedInventory with ITickable {
 
   override def clear(): Unit = this.stack = null
 
-  override def getName: String = return ModBlocks.blockStation.getLocalizedName()
+  override def getName: String = return this.name
 
   override def hasCustomName: Boolean = return false
 
@@ -189,7 +189,7 @@ class TileStation extends TileEntity with ISidedInventory with ITickable {
       this.count += 1
       this.tick = 0
       if (this.stack == null) {
-        this.stack = new ItemStack(Blocks.COBBLESTONE)
+        this.stack = new ItemStack(this.produced(0))
       } else {
         this.stack.setCount(Math.min(TileStation.MAX_STACK, this.stack.getCount() + 1))
       }

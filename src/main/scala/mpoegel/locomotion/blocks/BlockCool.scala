@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
   * Created by poegem on 7/17/2017.
   */
 class BlockCool() extends Block(Material.GROUND) {
-  this.setCreativeTab(CreativeTabs.DECORATIONS)
+  this.setCreativeTab(Locomotion.tabLocomotion)
   setUnlocalizedName(Locomotion.MODID + ".block_cool")
   setRegistryName("block_cool")
 

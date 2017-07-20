@@ -1,2 +1,6 @@
 tile.locomotion.block_cool.name=Block Cool
-tile.locomotion.block_station.name=Station
+tile.locomotion.block_lumber_yard.name=Lumber Yard
+
+item.locomotion.lumber_crate.name=Lumber Crate
+
+itemGroup.Locomotion=Locomotion

@@ -6,7 +6,6 @@ import net.minecraft.block.{Block, ITileEntityProvider}
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
-import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.tileentity.TileEntity
@@ -21,15 +20,18 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 /**
   * Created by Matt Poegel on 7/17/2017.
   */
-class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
-  this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS)
-  this.setUnlocalizedName(Locomotion.MODID + ".block_station")
-  this.setRegistryName("block_station")
+abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
+  this.setCreativeTab(Locomotion.tabLocomotion)
   this.setHardness(1.0F)
   this.setHarvestLevel("pickaxe", 0)
 
+  // Abstract methods
+  def getItemsProduced: Array[Item]
+  def getItemsConsumed: Array[Item]
+
   // Called when the block is placed or loaded client side
-  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = new TileStation()
+  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity =
+    new TileStation(this.getItemsProduced, this.getItemsConsumed, this.getLocalizedName)
 
   // Called when the block is right clicked
   override def onBlockActivated(worldIn: World, pos: BlockPos, state: IBlockState, playerIn: EntityPlayer,

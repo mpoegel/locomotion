@@ -1,6 +1,6 @@
 package mpoegel.locomotion.proxy
 
-import mpoegel.locomotion.{Locomotion, ModBlocks}
+import mpoegel.locomotion.{Locomotion, ModBlocks, ModItems}
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.client.model.obj.OBJLoader
 import net.minecraftforge.fml.common.Mod
@@ -17,6 +17,7 @@ object ClientProxy {
   def registerModels(event: ModelRegistryEvent): Unit =
   {
     ModBlocks.initModels()
+    ModItems.initModels()
   }
 }
 

@@ -1,7 +1,6 @@
 package mpoegel.locomotion
 
-import mpoegel.locomotion.blocks.BlockCool
-import mpoegel.locomotion.blocks.BlockStation
+import mpoegel.locomotion.blocks.{BlockCool, BlockLumberYard}
 import net.minecraftforge.fml.common.registry.GameRegistry
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
@@ -12,13 +11,13 @@ object ModBlocks {
   @GameRegistry.ObjectHolder("locomotion:block_cool")
   var blockCool: BlockCool = _
 
-  @GameRegistry.ObjectHolder("locomotion:block_station")
-  var blockStation: BlockStation = _
+  @GameRegistry.ObjectHolder("locomotion:block_lumber_yard")
+  var blockLumberYard: BlockLumberYard = _
 
   @SideOnly(Side.CLIENT)
   def initModels(): Unit =
   {
     blockCool.initModel()
-    blockStation.initModel()
+    blockLumberYard.initModel()
   }
 }
