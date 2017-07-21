@@ -2,9 +2,12 @@ package mpoegel.locomotion
 
 import java.util.logging.Logger
 
+import mpoegel.locomotion.guis.GuiHandler
 import mpoegel.locomotion.proxy.{ClientProxy, CommonProxy}
 import mpoegel.locomotion.tabs.TabLocomotion
+import net.minecraftforge.fml.common.Mod.Instance
 import net.minecraftforge.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
+import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.common.{Mod, SidedProxy}
 
 /**
@@ -17,7 +20,7 @@ object Locomotion {
 
   var tabLocomotion: TabLocomotion = _
 
-  @Mod.Instance
+  @Instance(MODID)
   var instance: Locomotion = _
 
   val LOGGER: Logger = Logger.getLogger(Locomotion.MODID)
@@ -33,6 +36,8 @@ object Locomotion {
   version = Locomotion.VERSION
 )
 class Locomotion {
+  Locomotion.instance = this
+
   @Mod.EventHandler
   def preInit(event: FMLPreInitializationEvent): Unit =
   {
@@ -43,6 +48,7 @@ class Locomotion {
   @Mod.EventHandler
   def init(event: FMLInitializationEvent): Unit =
   {
+    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler())
     Locomotion.proxy.init(event)
   }
 

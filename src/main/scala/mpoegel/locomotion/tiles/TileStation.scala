@@ -1,9 +1,11 @@
 package mpoegel.locomotion.tiles
 
+import mpoegel.locomotion.ModItems
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.{IInventory, ISidedInventory}
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{EnumFacing, ITickable}
 import net.minecraftforge.common.capabilities.Capability
@@ -16,6 +18,10 @@ import scala.reflect.ClassTag
 object TileStation {
   val MAX_STACK: Int = 32
   val UPDATE_INTERVAL: Int = 20
+  val SIZE = 1
+
+  val DEFAULT = new Array[Item](1)
+  DEFAULT(0) = ModItems.lumber_crate
 
   def putStackInInventoryAllSlots(iInventory: IInventory, stack: ItemStack, side: EnumFacing): ItemStack =
   {
@@ -101,19 +107,45 @@ object TileStation {
   * This class is heavily based upon the TileEntityCobblegen.java class from the Tiny Progressions mod by Kashdeya
   */
 class TileStation(produced: Array[Item], consumed: Array[Item], name: String) extends TileEntity with ISidedInventory
-    with ITickable {
+  with ITickable {
+
+  def this()
+  {
+    this(TileStation.DEFAULT, new Array[Item](0), "Lumber Yard")
+  }
+
   private var tick: Int = 0
-  private var count: Int = 0
   private var stack: ItemStack = _
 
-  override def getSizeInventory: Int = return 1
+  override def writeToNBT(compound: NBTTagCompound): NBTTagCompound =
+  {
+    super.writeToNBT(compound)
+    if (this.stack != null) {
+      compound.setInteger("counter", this.getCount)
+    } else {
+      compound.setInteger("counter", 0)
+    }
+    compound
+  }
 
-  override def getStackInSlot(index: Int): ItemStack = return this.stack
+  override def readFromNBT(compound: NBTTagCompound): Unit =
+  {
+    super.readFromNBT(compound)
+    val count = compound.getInteger("counter")
+    if (this.stack == null) {
+      this.stack = new ItemStack(this.produced(0))
+    }
+    this.stack.setCount(count)
+  }
+
+  override def getSizeInventory: Int = 1
+
+  override def getStackInSlot(index: Int): ItemStack = this.stack
 
   override def decrStackSize(index: Int, count: Int): ItemStack =
   {
-    if (this.stack != null && this.stack.getMaxStackSize() > this.count) {
-      return this.stack.splitStack(this.count)
+    if (this.stack != null && this.stack.getMaxStackSize > this.getCount) {
+      return this.stack.splitStack(this.getCount)
     } else {
       val tmp: ItemStack = this.stack
       this.stack = null
@@ -139,86 +171,84 @@ class TileStation(produced: Array[Item], consumed: Array[Item], name: String) ex
     }
   }
 
-  override def getInventoryStackLimit: Int = return TileStation.MAX_STACK
+  override def getInventoryStackLimit: Int = TileStation.MAX_STACK
 
-  override def isUsableByPlayer(player: EntityPlayer): Boolean = return true
+  override def isUsableByPlayer(player: EntityPlayer): Boolean = true
 
-  override def openInventory(player: EntityPlayer): Unit = return
+  override def openInventory(player: EntityPlayer): Unit = {}
 
-  override def closeInventory(player: EntityPlayer): Unit = return
+  override def closeInventory(player: EntityPlayer): Unit = {}
 
   override def isItemValidForSlot(index: Int, stack: ItemStack): Boolean =
   {
     return index == 0 &&
            stack != null &&
-           stack.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE)
+           stack.getItem == Item.getItemFromBlock(Blocks.COBBLESTONE)
   }
 
-  override def getField(id: Int): Int = return 0
+  override def getField(id: Int): Int = 0
 
-  override def setField(id: Int, value: Int): Unit = return
+  override def setField(id: Int, value: Int): Unit = {}
 
-  override def getFieldCount: Int = return 0
+  override def getFieldCount: Int = 0
 
   override def clear(): Unit = this.stack = null
 
-  override def getName: String = return this.name
+  override def getName: String = this.name
 
-  override def hasCustomName: Boolean = return false
+  override def hasCustomName: Boolean = false
 
-  override def getSlotsForFace(side: EnumFacing): Array[Int] = return new Array[Int](0)
+  override def getSlotsForFace(side: EnumFacing): Array[Int] = new Array[Int](0)
 
-  override def canInsertItem(index: Int, itemStackIn: ItemStack, direction: EnumFacing): Boolean = return false
+  override def canInsertItem(index: Int, itemStackIn: ItemStack, direction: EnumFacing): Boolean = false
 
   override def canExtractItem(index: Int, stack: ItemStack, direction: EnumFacing): Boolean =
   {
     return index == 0 &&
            stack != null &&
-           stack.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE)
+           stack.getItem == Item.getItemFromBlock(Blocks.COBBLESTONE)
   }
 
-  override def isEmpty: Boolean = return this.stack == null
+  override def isEmpty: Boolean = this.stack == null
 
   override def update(): Unit =
   {
-    if (getWorld().isRemote) {
-      return;
+    if (getWorld.isRemote) {
+      return
     }
     this.tick += 1
     if (this.tick > TileStation.UPDATE_INTERVAL) {
-      this.count += 1
       this.tick = 0
-      if (this.stack == null) {
+      if (this.stack == null || this.stack == ItemStack.EMPTY ) {
         this.stack = new ItemStack(this.produced(0))
       } else {
-        this.stack.setCount(Math.min(TileStation.MAX_STACK, this.stack.getCount() + 1))
+        this.stack.setCount(Math.min(TileStation.MAX_STACK, this.stack.getCount + 1))
       }
-      this.setInventorySlotContents(0, this.stack)
       // not quite sure what this does yet
-      val tile = getWorld().getTileEntity(pos.offset(EnumFacing.UP))
+      val tile = getWorld.getTileEntity(pos.offset(EnumFacing.UP))
       if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
         val handler: IItemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)
         if (this.getStackInSlot(0) != null) {
           val stack: ItemStack = this.getStackInSlot(0).copy()
           stack.setCount(1)
           val stack2: ItemStack = ItemHandlerHelper.insertItem(handler, stack, true)
-          if (stack2 == null || stack2.getCount() == 0) {
+          if (stack2 == null || stack2.getCount == 0) {
             ItemHandlerHelper.insertItem(handler, this.decrStackSize(0, 1), false)
             markDirty()
           }
         }
       // or this...
       } else if (tile.isInstanceOf[IInventory]) {
-        val iinventory: IInventory = tile.asInstanceOf[IInventory]
-        if (this.isInventoryFull(iinventory, EnumFacing.UP)) {
+        val iInventory: IInventory = tile.asInstanceOf[IInventory]
+        if (this.isInventoryFull(iInventory, EnumFacing.UP)) {
           return
         } else {
           if (this.getStackInSlot(0) != null) {
             val stack: ItemStack = this.getStackInSlot(0).copy()
-            val stack2: ItemStack = TileStation.putStackInInventoryAllSlots(iinventory, this.decrStackSize(0, 1),
+            val stack2: ItemStack = TileStation.putStackInInventoryAllSlots(iInventory, this.decrStackSize(0, 1),
               EnumFacing.UP)
-            if (stack2 == null || stack2.getCount() == 0) {
-              iinventory.markDirty()
+            if (stack2 == null || stack2.getCount == 0) {
+              iInventory.markDirty()
             } else {
               this.setInventorySlotContents(0, stack)
             }
@@ -236,34 +266,35 @@ class TileStation(produced: Array[Item], consumed: Array[Item], name: String) ex
       val slots: Array[Int] = iSidedInventory.getSlotsForFace(side)
       for (k: Int <- slots) {
         val itemStack: ItemStack = iSidedInventory.getStackInSlot(k)
-        if (itemStack == null || itemStack.getCount() != itemStack.getMaxStackSize()) {
+        if (itemStack == null || itemStack.getCount != itemStack.getMaxStackSize) {
           return false
         }
       }
     } else {
-      val i: Int = iInventory.getSizeInventory()
-      for (j: Int <- 0 to i-1) {
+      val i: Int = iInventory.getSizeInventory
+      for (j: Int <- 0 until i) {
         val itemStack: ItemStack = iInventory.getStackInSlot(j)
-        if (itemStack == null || itemStack.getCount() != itemStack.getMaxStackSize()) {}
+        if (itemStack == null || itemStack.getCount != itemStack.getMaxStackSize) {}
         return false
       }
     }
-    return true
+    true
   }
 
   def getCapability[T: ClassTag](capability: Capability[T], facing: EnumFacing): T =
   {
     if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-      return (new InvWrapper(this)).asInstanceOf[T]
+      return new InvWrapper(this).asInstanceOf[T]
     }
-    return super.getCapability(capability, facing)
+    super.getCapability(capability, facing)
   }
 
   override def hasCapability(capability: Capability[_], facing: EnumFacing): Boolean =
   {
-    return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing)
+    capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing)
   }
 
-  def getCount(): Int = return this.stack.getCount()
+
+  def getCount: Int = this.stack.getCount
 
 }

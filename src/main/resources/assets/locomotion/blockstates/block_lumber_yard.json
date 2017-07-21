@@ -1,7 +1,13 @@
 {
-  "variants": {
-    "normal": {
-      "model": "locomotion:block_lumber_yard_model"
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "all": "locomotion:block/block_cool"
     }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
   }
 }

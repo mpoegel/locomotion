@@ -20,6 +20,10 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 /**
   * Created by Matt Poegel on 7/17/2017.
   */
+object BlockStation {
+  val GUI_ID = 1
+}
+
 abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
   this.setCreativeTab(Locomotion.tabLocomotion)
   this.setHardness(1.0F)
@@ -46,15 +50,16 @@ abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvide
     }
     val tileStation: TileStation = tile.asInstanceOf[TileStation]
     if (playerIn.isSneaking) {
-      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getCount()))
+      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getCount))
     } else {
       // drop the current inventory
-      val stack: ItemStack = tileStation.removeStackFromSlot(0)
-      if (stack != null) {
-        if (!playerIn.inventory.addItemStackToInventory(stack)) {
-          ForgeHooks.onPlayerTossEvent(playerIn, stack, false)
-        }
-      }
+//      val stack: ItemStack = tileStation.removeStackFromSlot(0)
+//      if (stack != null) {
+//        if (!playerIn.inventory.addItemStackToInventory(stack)) {
+//          ForgeHooks.onPlayerTossEvent(playerIn, stack, false)
+//        }
+//      }
+      playerIn.openGui(Locomotion.instance, BlockStation.GUI_ID, worldIn, pos.getX, pos.getY, pos.getZ)
     }
     true
   }
