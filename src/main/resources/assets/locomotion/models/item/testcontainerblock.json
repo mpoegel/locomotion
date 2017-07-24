@@ -1,7 +1,7 @@
 {
-  "parent": "locomotion:block/block_lumber_yard_model",
+  "parent": "locomotion:block/testcontainerblock",
   "textures": {
-    "layer0": "locomotion:block/lumber_yard"
+    "layer0": "locomotion:block/station"
   },
   "display": {
     "thirdperson": {

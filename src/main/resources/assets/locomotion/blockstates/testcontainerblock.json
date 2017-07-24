@@ -2,9 +2,7 @@
   "forge_marker": 1,
   "defaults": {
     "model": "cube_all",
-    "textures": {
-      "all": "locomotion:block/lumber_yard"
-    }
+    "textures": { "all":"locomotion:block/station"}
   },
   "variants": {
     "normal": [{}],
