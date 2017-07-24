@@ -2,16 +2,14 @@ package mpoegel.locomotion.proxy
 
 import mpoegel.locomotion.{Locomotion, ModBlocks, ModItems}
 import mpoegel.locomotion.blocks.{BlockCool, BlockLumberYard}
-import mpoegel.locomotion.guis.GuiHandler
 import mpoegel.locomotion.items.ItemLumberCrate
-import mpoegel.locomotion.tiles.TileStation
+import mpoegel.locomotion.tiles.{TileLumberYard, TileStation}
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemBlock}
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event._
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.common.registry.GameRegistry
 
 /**
@@ -31,6 +29,7 @@ object CommonProxy {
     ModBlocks.blockLumberYard = blockLumberYard
 
     GameRegistry.registerTileEntity(classOf[TileStation], Locomotion.MODID + "_blockStation")
+    GameRegistry.registerTileEntity(classOf[TileLumberYard], Locomotion.MODID + "_blockLumberYard")
   }
 
   @SubscribeEvent

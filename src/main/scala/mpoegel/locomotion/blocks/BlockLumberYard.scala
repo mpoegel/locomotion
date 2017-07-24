@@ -1,20 +1,21 @@
 package mpoegel.locomotion.blocks
-import mpoegel.locomotion.{Locomotion, ModItems}
-import net.minecraft.item.Item
+import mpoegel.locomotion.tiles.TileLumberYard
+import mpoegel.locomotion.Locomotion
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.world.World
 
 /**
   * Created by Matt Poegel on 7/19/2017.
   */
+object BlockLumberYard {
+  val GUI_ID = 2
+}
+
 class BlockLumberYard extends BlockStation {
   this.setUnlocalizedName(Locomotion.MODID + ".block_lumber_yard")
   this.setRegistryName("block_lumber_yard")
 
-  override def getItemsProduced: Array[Item] =
-  {
-    val arr = new Array[Item](1)
-    arr(0) = ModItems.lumber_crate
-    arr
+  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = {
+    new TileLumberYard
   }
-
-  override def getItemsConsumed: Array[Item] = null
 }

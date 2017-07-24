@@ -7,14 +7,13 @@ import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.{BlockRenderLayer, EnumFacing, EnumHand}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.client.model.ModelLoader
-import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 /**
@@ -24,18 +23,14 @@ object BlockStation {
   val GUI_ID = 1
 }
 
-abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
+class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
   this.setCreativeTab(Locomotion.tabLocomotion)
   this.setHardness(1.0F)
   this.setHarvestLevel("pickaxe", 0)
 
-  // Abstract methods
-  def getItemsProduced: Array[Item]
-  def getItemsConsumed: Array[Item]
-
   // Called when the block is placed or loaded client side
   override def createNewTileEntity(worldIn: World, meta: Int): TileEntity =
-    new TileStation(this.getItemsProduced, this.getItemsConsumed, this.getLocalizedName)
+    new TileStation()
 
   // Called when the block is right clicked
   override def onBlockActivated(worldIn: World, pos: BlockPos, state: IBlockState, playerIn: EntityPlayer,
@@ -50,15 +45,8 @@ abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvide
     }
     val tileStation: TileStation = tile.asInstanceOf[TileStation]
     if (playerIn.isSneaking) {
-      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getCount))
+      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getStackInSlot(0).getCount))
     } else {
-      // drop the current inventory
-//      val stack: ItemStack = tileStation.removeStackFromSlot(0)
-//      if (stack != null) {
-//        if (!playerIn.inventory.addItemStackToInventory(stack)) {
-//          ForgeHooks.onPlayerTossEvent(playerIn, stack, false)
-//        }
-//      }
       playerIn.openGui(Locomotion.instance, BlockStation.GUI_ID, worldIn, pos.getX, pos.getY, pos.getZ)
     }
     true
