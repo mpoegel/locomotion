@@ -1,7 +1,7 @@
 package mpoegel.locomotion.blocks
 
-import mpoegel.locomotion.tiles.{TileLumberYard, TileStation}
 import mpoegel.locomotion.Locomotion
+import mpoegel.locomotion.tiles.{TilePaperMill, TileStation}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
@@ -11,18 +11,18 @@ import net.minecraft.util.text.TextComponentString
 import net.minecraft.world.World
 
 /**
-  * Created by Matt Poegel on 7/19/2017.
+  * Created by Matt Poegel on 7/24/2017.
   */
-object BlockLumberYard {
-  val GUI_ID = 2
+object BlockPaperMill {
+  val GUI_ID = 3
 }
 
-class BlockLumberYard extends BlockStation {
-  this.setUnlocalizedName(Locomotion.MODID + ".block_lumber_yard")
-  this.setRegistryName("block_lumber_yard")
+class BlockPaperMill extends BlockStation {
+  this.setUnlocalizedName(Locomotion.MODID + ".block_paper_mill")
+  this.setRegistryName("block_paper_mill")
 
   override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = {
-    new TileLumberYard
+    new TilePaperMill
   }
 
   override def onBlockActivated(worldIn: World, pos: BlockPos, state: IBlockState, playerIn: EntityPlayer,
@@ -38,7 +38,7 @@ class BlockLumberYard extends BlockStation {
     if (playerIn.isSneaking) {
       playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getCount))
     } else {
-      playerIn.openGui(Locomotion.instance, BlockStation.GUI_ID, worldIn, pos.getX, pos.getY, pos.getZ)
+      playerIn.openGui(Locomotion.instance, BlockPaperMill.GUI_ID, worldIn, pos.getX, pos.getY, pos.getZ)
     }
     true
   }

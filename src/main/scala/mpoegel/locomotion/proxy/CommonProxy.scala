@@ -1,9 +1,9 @@
 package mpoegel.locomotion.proxy
 
 import mpoegel.locomotion.{Locomotion, ModBlocks, ModItems}
-import mpoegel.locomotion.blocks.{BlockCool, BlockLumberYard}
-import mpoegel.locomotion.items.ItemLumberCrate
-import mpoegel.locomotion.tiles.{TileLumberYard, TileStation}
+import mpoegel.locomotion.blocks.{BlockCool, BlockLumberYard, BlockPaperMill}
+import mpoegel.locomotion.items.{ItemLumberCrate, ItemPaperCrate}
+import mpoegel.locomotion.tiles.{TileLumberYard, TilePaperMill, TileStation}
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemBlock}
 import net.minecraftforge.event.RegistryEvent
@@ -28,8 +28,12 @@ object CommonProxy {
     event.getRegistry.register(blockLumberYard)
     ModBlocks.blockLumberYard = blockLumberYard
 
+    ModBlocks.blockPaperMill = new BlockPaperMill()
+    event.getRegistry.register(ModBlocks.blockPaperMill)
+
     GameRegistry.registerTileEntity(classOf[TileStation], Locomotion.MODID + "_blockStation")
     GameRegistry.registerTileEntity(classOf[TileLumberYard], Locomotion.MODID + "_blockLumberYard")
+    GameRegistry.registerTileEntity(classOf[TilePaperMill], Locomotion.MODID + "_blockPaperMill")
   }
 
   @SubscribeEvent
@@ -37,9 +41,13 @@ object CommonProxy {
   {
     event.getRegistry.register(new ItemBlock(ModBlocks.blockCool).setRegistryName(ModBlocks.blockCool.getRegistryName))
     event.getRegistry.register(new ItemBlock(ModBlocks.blockLumberYard).setRegistryName(ModBlocks.blockLumberYard.getRegistryName))
+    event.getRegistry.register(new ItemBlock(ModBlocks.blockPaperMill).setRegistryName(ModBlocks.blockPaperMill.getRegistryName))
 
     ModItems.lumber_crate = new ItemLumberCrate
     event.getRegistry.register(ModItems.lumber_crate)
+
+    ModItems.paper_crate = new ItemPaperCrate
+    event.getRegistry.register(ModItems.paper_crate)
   }
 }
 

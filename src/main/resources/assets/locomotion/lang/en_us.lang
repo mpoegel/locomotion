@@ -1,6 +1,8 @@
 tile.locomotion.block_cool.name=Block Cool
 tile.locomotion.block_lumber_yard.name=Lumber Yard
+tile.locomotion.block_paper_mill.name=Paper Mill
 
 item.locomotion.lumber_crate.name=Lumber Crate
+item.locomotion.paper_crate.name=Paper Crate
 
 itemGroup.Locomotion=Locomotion

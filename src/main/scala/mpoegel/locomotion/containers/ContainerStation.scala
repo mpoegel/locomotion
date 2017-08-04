@@ -10,8 +10,9 @@ class ContainerStation(playerInventory: IInventory, tile: TileStation) extends C
   this.addOwnSlots()
   this.addPlayerSlots(this.playerInventory)
 
-  private def addPlayerSlots(playerInventory: IInventory): Unit =
-  {
+  def getSize: Int = 1
+
+  private def addPlayerSlots(playerInventory: IInventory): Unit = {
     // Slots for the player's main inventory
     for (row <- 0 to 2) {
       for (col <- 0 to 8) {
@@ -28,8 +29,7 @@ class ContainerStation(playerInventory: IInventory, tile: TileStation) extends C
     }
   }
 
-  def addOwnSlots(): Unit =
-  {
+  def addOwnSlots(): Unit = {
     val itemHandler: IItemHandler = this.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
     var x = 10
     val y = 6
@@ -40,18 +40,17 @@ class ContainerStation(playerInventory: IInventory, tile: TileStation) extends C
     }
   }
 
-  override def transferStackInSlot(playerIn: EntityPlayer, index: Int): ItemStack =
-  {
+  override def transferStackInSlot(playerIn: EntityPlayer, index: Int): ItemStack = {
     var itemStack: ItemStack = ItemStack.EMPTY
     val slot: Slot = this.inventorySlots.get(index)
     if (slot != null && slot.getHasStack) {
       val itemStack1 = slot.getStack
       itemStack = itemStack1.copy()
-      if (index < TileStation.SIZE) {
-        if (!this.mergeItemStack(itemStack1, TileStation.SIZE, this.inventorySlots.size(), true)) {
+      if (index < this.getSize) {
+        if (!this.mergeItemStack(itemStack1, this.getSize, this.inventorySlots.size(), true)) {
           return ItemStack.EMPTY
         }
-      } else if (!this.mergeItemStack(itemStack1, 0, TileStation.SIZE, false)) {
+      } else if (!this.mergeItemStack(itemStack1, 0, this.getSize, false)) {
         return ItemStack.EMPTY
       }
       if (itemStack1.isEmpty) {
@@ -63,8 +62,5 @@ class ContainerStation(playerInventory: IInventory, tile: TileStation) extends C
     itemStack
   }
 
-  override def canInteractWith(playerIn: EntityPlayer): Boolean =
-  {
-    true
-  }
+  override def canInteractWith(playerIn: EntityPlayer): Boolean = true
 }

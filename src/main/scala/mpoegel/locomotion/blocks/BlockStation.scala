@@ -23,14 +23,13 @@ object BlockStation {
   val GUI_ID = 1
 }
 
-class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
+abstract class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
   this.setCreativeTab(Locomotion.tabLocomotion)
   this.setHardness(1.0F)
   this.setHarvestLevel("pickaxe", 0)
 
   // Called when the block is placed or loaded client side
-  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity =
-    new TileStation()
+  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity
 
   // Called when the block is right clicked
   override def onBlockActivated(worldIn: World, pos: BlockPos, state: IBlockState, playerIn: EntityPlayer,
@@ -45,7 +44,7 @@ class BlockStation extends Block(Material.ROCK) with ITileEntityProvider {
     }
     val tileStation: TileStation = tile.asInstanceOf[TileStation]
     if (playerIn.isSneaking) {
-      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getStackInSlot(0).getCount))
+      playerIn.sendMessage(new TextComponentString("sneaky sneaky: "  + tileStation.getCount))
     } else {
       playerIn.openGui(Locomotion.instance, BlockStation.GUI_ID, worldIn, pos.getX, pos.getY, pos.getZ)
     }
